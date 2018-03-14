@@ -4,10 +4,12 @@ import genres from './util/genres';
 
 const app = new Vue({
     el: '#app',
-    data() {},
+    data: {
+        title: 'Vue.js Cinema',
+    },
     components: {
         'movie-list': {
-            data() {
+            data: () => {
                 return {
                     movies: {},
                 };
@@ -18,12 +20,32 @@ const app = new Vue({
             </div>`,
         },
         'movie-filter': {
-            data() {
-                return {};
+            data: () => {
+                return {
+                    genres,
+                };
+            },
+            components: {
+                'check-filter': {
+                    props: ['title'],
+                    data: () => {
+                        return {
+                            checked: false,
+                        };
+                    },
+                    template: `
+                    <div v-bind:class="{ 'check-filter' : true, active: checked }" v-on:click="checked = !checked">
+                        <span class="checkbox"></span>
+                        <span class="check-filter-title">{{ title }}</span>
+                    </div>`,
+                },
             },
             template: `
             <div id="movie-filter">
-                <check-filter></check-filter>
+                <h2>Filters</h2>
+                <div class="filter-group">
+                    <check-filter v-for="genre in genres" v-bind:title="genre" v-bind:key="genre"></check-filter>
+                </div>
             </div>`,
         },
     },
